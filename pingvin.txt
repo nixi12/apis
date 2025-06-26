@@ -1,0 +1,405 @@
+I3
+1. Napiši funkciju koja traži unos cijene i postotka PDV-a (5%, 13% ili 25%) te ispisuje ukupnu cijenu s PDV-om.
+def izracunaj_pdv():
+    cijena = float(input("Unesi cijenu: "))
+    pdv = int(input("Unesi PDV (5, 13 ili 25): "))
+    ukupno = cijena * (1 + pdv / 100)
+    print(f"Ukupna cijena s PDV-om: {ukupno:.2f} €")
+
+izracunaj_pdv()
+
+2. Napiši funkciju koja broji koliko samoglasnika ima u zadanoj riječi.
+def broj_samoglasnika(rijec):
+    samoglasnici = "aeiouAEIOU"
+    broj = sum(1 for slovo in rijec if slovo in samoglasnici)
+    print(f"Broj samoglasnika u riječi '{rijec}': {broj}")
+
+broj_samoglasnika(input("Unesi riječ: "))
+
+3. Koristeći formulu izračunaj visinu loptice u trenutku t.
+def visina(v0, t):
+    g = 9.81
+    h = v0 * t - 0.5 * g * t**2
+    print(f"Visina loptice: {h:.2f} m")
+
+visina(20, 2)  # možeš zamijeniti 20 i 2 s input() ako treba unos
+
+
+
+
+
+
+
+
+I4
+1. Omogući unos imena, predmeta i ocjena više puta. Ispisi sve unose.
+class Ucenik:
+    def __init__(self, ime, predmet, ocjena):
+        self.ime = ime
+        self.predmet = predmet
+        self.ocjena = ocjena
+
+lista = []
+
+while True:
+    ime = input("Ime: ")
+    predmet = input("Predmet: ")
+    ocjena = int(input("Ocjena: "))
+    lista.append(Ucenik(ime, predmet, ocjena))
+    
+    jos = input("Želiš li dodati još? (da/ne): ")
+    if jos.lower() != "da":
+        break
+
+for u in lista:
+    print(f"{u.ime} - {u.predmet}: {u.ocjena}")
+    
+2. Kreiraj klasu koja ispisuje naziv slike i dimenzije.
+class Slika:
+    def __init__(self, naziv, sirina, visina):
+        self.naziv = naziv
+        self.sirina = sirina
+        self.visina = visina
+
+    def ispis(self):
+        print(f"{self.naziv} veličina {self.sirina}x{self.visina}")
+
+s = Slika("slika.jpg", 1920, 1080)
+s.ispis()
+
+
+
+
+
+
+
+
+
+
+
+
+I5
+1. Unesi vrijeme početka i kraja filma i ispiši koliko minuta traje.
+from datetime import datetime
+
+pocetak = input("Unesi vrijeme početka (HH:MM): ")
+kraj = input("Unesi vrijeme kraja (HH:MM): ")
+
+t1 = datetime.strptime(pocetak, "%H:%M")
+t2 = datetime.strptime(kraj, "%H:%M")
+trajanje = (t2 - t1).seconds // 60
+
+print(f"Film je trajao {trajanje} minuta")
+
+
+2.Zrcalno okreni sliku i zamuti donji dio.
+from PIL import Image
+from IPython.display import display
+
+im = Image.open("pingvin_black.jpg")
+logo = Image.open("Slike/vua.png")
+
+slika = Image.open("slika.jpg")
+zrcaljena = slika.transpose(Image.FLIP_LEFT_RIGHT)
+
+sirina, visina = zrcaljena.size
+donji_dio = zrcaljena.crop((0, visina//2, sirina, visina))
+zamuceni_dio = donji_dio.filter(ImageFilter.GaussianBlur(5))
+zrcaljena.paste(zamuceni_dio, (0, visina//2))
+
+zrcaljena.show()
+
+
+
+dio2:
+from PIL import Image
+from IPython.display import display
+
+im = Image.open("pingvin_black.jpg")
+logo = Image.open("Slike/vua.png")
+
+logo_resize = logo.resize((120, 112))
+
+im_target = im.convert("RGBA")
+logo_resize = logo_resize.convert("RGBA")
+
+im_target.paste(logo_resize, (10, 380), logo_resize)
+display(im_target)
+
+
+
+3. Korisnik unosi mjesec u 2024., program računa koliko ima radnih dana (pon–pet).
+import calendar
+from datetime import date
+
+mjesec = int(input("Unesi broj mjeseca (1-12): "))
+broj_radnih_dana = 0
+
+for dan in range(1, calendar.monthrange(2024, mjesec)[1] + 1):
+    if date(2024, mjesec, dan).weekday() < 5:
+        broj_radnih_dana += 1
+
+print(f"U {mjesec}. mjesecu 2024. ima {broj_radnih_dana} radnih dana.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+I3Z
+
+
+0.1.broji rijeci u recnicni :
+
+def prebroji(recenica):
+    rijeci = recenica.split()
+    return len(rijeci)
+
+recenica = input("Unesi rečenicu: ")
+print("Unesena rečenica ima", prebroji(recenica), "riječi.")
+
+
+1. Napišite funkciju koja prima prirodni broj N i vraća je li broj prost ili nije. Pozovite funkciju za sve brojeve
+između 1 i 500 te ispišite samo one proste
+
+def je_li_prost(broj):
+ for i in range (2, broj):
+ if broj % i == 0:
+ return False
+ return True
+for i in range(1, 501):
+ if je_li_prost(i):
+ print(i, end=" ")
+ 
+ 
+ 2. Napišite funkciju koja od korisnika učitava cijeli broj između 1 i 5 (ako korisnik upiše neki drugi cijeli broj,
+ponavljajte učitavanje dok ne upiše broj između 1 i 5). Nakon ispravnog učitavanja, neka funkcija vrati
+učitani broj pozivatelju. U glavnom dijelu programa napravite listu i pomoću funkcije učitajte u nju
+brojeve između 1 i 5. Na kraju, ispišite sadržaj liste. 
+
+def ucitaj():
+ while True:
+ broj = int(input("Upisite broj: "))
+ if broj >= 1 and broj <= 5:
+ break
+ return broj
+brojevi = []
+for i in range(5):
+ print("Ucitavam " + str(i + 1) + ". broj")
+ ucitani_broj = ucitaj()
+ brojevi.append(ucitani_broj)
+print("Ispis brojeva: ", end="")
+for i in range(len(brojevi)):
+ print(brojevi[i], end=" ")
+ 
+ 
+ 3. Napišite program koji od korisnika učitava dva decimalna broja i operaciju (zbrajanje, oduzimanje,
+množenje ili dijelite). Ispišite rezultat tražene operacije koristeći po jednu funkciju za svaku od operacija.
+def zbroji(a, b):
+ print(a, "+", b, "=", a + b)
+def oduzmi(a, b):
+ print(a, "-", b, "=", a - b)
+def mnozi(a, b):
+ print(a, "*", b, "=", a * b)
+def dijeli(a, b):
+ print(a, "/", b, "=", a / b)
+
+a = float(input("Upisite a: "))
+b = float(input("Upisite b: "))
+op = input("Upisite operaciju: ")
+if op == '+':
+ zbroji(a, b)
+elif op == '-':
+ oduzmi(a, b)
+elif op == '*':
+ mnozi(a, b)
+elif op == '/':
+ dijeli(a, b)
+else:
+ print("Nepoznata operacija")
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ I4z
+ 
+ 1. Definirajte klasu Osoba tako da je prilikom instanciranja obavezno navesti ime, prezime, OIB i godinu
+rođenja. Na klasu dodajte i metodu koja ispisuje sve podatke u formatu prema vašoj želji. U glavnom
+dijelu napravite jednu instancu tako da sve vrijednosti učitate od korisnika, a zatim sve vrijednosti iz prve
+instance prekopirajte u drugu instancu. Na kraju, pozivom metode ispišite sve vrijednosti iz druge
+instance.
+
+class Osoba:
+ def __init__(self, ime, prezime, OIB, godina_rodjenja):
+ self.ime = ime
+ self.prezime = prezime
+ self.OIB = OIB
+ self.godina_rodjenja = godina_rodjenja
+
+ def ispisi(self):
+ print(self.ime, self.prezime, self.OIB, self.godina_rodjenja)
+o1 = Osoba(
+ input("Upišite ime: "),
+ input("Upišite prezime: "),
+ input("Upišite OIB: "),
+ int(input("Upišite godinu rođenja: "))
+)
+o2 = Osoba(
+ o1.ime,
+ o1.prezime,
+ o1.OIB,
+ o1.godina_rodjenja
+)
+
+o2.ispisi()
+
+
+
+2. Napišite program koji definira klasu KolicinaKise prilikom čije izrade treba zadati količinu pale kiše i redni
+broj mjeseca (primjerice, u 6. mjesecu je palo 47 mm kiše). Napravite listu sa svih 12 mjeseci i za svaki
+mjesec generirajte slučajnu količinu pale kiše između 25 i 100 mm. Nakon toga, pronađite u kojem
+mjesecu je palo najviše kiše i ispišite njegov broj i količinu kiše. 
+
+import random
+class KolicinaKise:
+ def __init__(self, mjesec, kolicina):
+ self.mjesec = mjesec
+ self.kolicina = kolicina
+padaline = []
+for i in range(1, 13):
+ padaline.append(
+ KolicinaKise(
+ i,
+ random.randint(25, 100)
+ )
+ )
+najvise = padaline[0]
+for p in padaline:
+ if p.kolicina > najvise.kolicina:
+ najvise = p
+print("Najvise kiše je palo u mjesecu broj {} ({} mm)".format(najvise.mjesec,
+najvise.kolicina))
+
+
+
+
+
+
+
+
+
+
+
+I5Z
+
+1. Napišite program koji od korisnika učitava datum i vrijeme početka prvog predavanja te ispisuje termine
+svih 15 predavanja u hrvatskom formatu, ako znamo da se svako predavanje odvija u istom terminu
+svakog tjedna
+
+import datetime
+prvo_predavanje = datetime.datetime.strptime(
+ input("Upišite datum i vrijeme početka prvog predavanja u hrvatskom formatu: "),
+ "%d.%m.%Y. %H:%M"
+)
+trenutno_predavanje = prvo_predavanje
+razmak = datetime.timedelta(weeks=1)
+for i in range(15):
+ print("{}. predavanje će se održati: {}".format(i + 1,
+trenutno_predavanje.strftime("%d.%m.%Y. %H:%M")))
+ trenutno_predavanje += razmak
+ 
+ 2. Napišite program koji omogućuje korisniku da upiše datum početka i kraja godišnjeg odmora pa mu
+izračunajte i ispišite koliko će radnih dana potrošiti (smatrajte da su radni dani ponedjeljak-petak).
+
+import datetime
+pocetak_go = datetime.datetime.strptime(
+ input("Upišite prvi dan GO u hrvatskom formatu: "),
+ "%d.%m.%Y."
+)
+kraj_go = datetime.datetime.strptime(
+ input("Upišite zadnji dan GO u hrvatskom formatu: "),
+ "%d.%m.%Y."
+)
+trenutni_dan = pocetak_go
+razmak = datetime.timedelta(days=1)
+radnih_dana = 0
+while trenutni_dan <= kraj_go:
+ if trenutni_dan.isoweekday() in [1, 2, 3, 4, 5]:
+ radnih_dana += 1
+ trenutni_dan += razmak
+print("Potrošit ćete {} radnih dana".format(radnih_dana))
+
+3. Napišite program koji ispisuje sve prijestupne godine od 2000-te do 2100-te (uključujući i njih). Koristite
+činjenicu da u prijestupnoj godini veljača ima 29 dana.
+
+import datetime
+start = datetime.date(day=1, month=1, year=2000)
+end = datetime.date(day=31, month=12, year=2100)
+trenutno = start
+za_dodati = datetime.timedelta(days=1)
+prijestupne_godine = []
+while trenutno <= end:
+ if trenutno.month == 2 and trenutno.day == 29:
+ prijestupne_godine.append(trenutno.year)
+ trenutno += za_dodati
+
+print("Prijestupne godine su {}".format(prijestupne_godine))
+
+4. Napišite program koji od korisnika učitava dva datuma u ISO formatu, a zatim ispisuje četvrtaka ima
+između njih (uključujući i te datume).
+
+import datetime
+pocetak = datetime.datetime.strptime(
+ input("Upišite prvi datum u ISO formatu: "), "%Y-%m-%d"
+)
+kraj = datetime.datetime.strptime(
+ input("Upišite zadnji datum u ISO formatu: "), "%Y-%m-%d"
+)
+trenutni = pocetak
+cetvrtaka = 0
+while trenutni <= kraj:
+ if trenutni.isoweekday() == 4:
+ cetvrtaka += 1
+ trenutni += datetime.timedelta(days=1)
+
+print("Između unesenih datuma ima {} četvrtaka".format(cetvrtaka))
+
+5. Napišite program koji od korisnika učitava koliko epizoda serije želi pogledati, koliko traje jedna epizoda,
+te kad počinje gledati seriju. Nakon toga, ispišite korisniku kad će završiti s gledanjem serije, uzevši u
+obzir da između dvije epizode stavite 10 minuta pauze.
+
+import datetime
+epizoda = int(input("Koliko epizoda želite pogledati: "))
+trajanje = int(input("Koliko minuta traje svaka epizoda: "))
+pocetak = datetime.datetime.strptime(
+ input("Kad počinjete gledati seriju: "),
+ "%d.%m.%Y. %H:%M"
+)
+kraj = pocetak
+for i in range(epizoda):
+ # dodamo trajanje jedne epizode
+ kraj += datetime.timedelta(minutes=trajanje)
+
+ # ako nismo upravo pogledali zadnju epizodu, dodamo pauzu
+ # (iza zadnje epizide ne ide pauza)
+ if i < epizoda - 1:
+ kraj += datetime.timedelta(minutes=10)
+
+print("S gledanjem ćete završiti: {}".format(kraj.strftime("%d.%m.%Y. %H:%M"))) 
+
+
