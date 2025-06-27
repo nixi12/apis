@@ -17,12 +17,21 @@ def broj_samoglasnika(rijec):
 broj_samoglasnika(input("Unesi riječ: "))
 
 3. Koristeći formulu izračunaj visinu loptice u trenutku t.
-def visina(v0, t):
-    g = 9.81
-    h = v0 * t - 0.5 * g * t**2
-    print(f"Visina loptice: {h:.2f} m")
 
-visina(20, 2)  # možeš zamijeniti 20 i 2 s input() ako treba unos
+def visina_loptice(h0, v0, t):
+    g = 9.81
+    h = h0 + v0 * t - 0.5 * g * t**2
+    return h
+
+# unos podataka
+h0 = float(input("Unesite početnu visinu (m): "))
+v0 = float(input("Unesite početnu brzinu (m/s): "))
+t = float(input("Unesite vrijeme (s): "))
+
+# poziv funkcije i ispis
+rezultat = visina_loptice(h0, v0, t)
+print(f"Loptica je na visini od {rezultat:.2f} m u trenutku {t} s.")
+
 
 
 
