@@ -32,27 +32,41 @@ visina(20, 2)  # možeš zamijeniti 20 i 2 s input() ako treba unos
 
 
 I4
-1. Omogući unos imena, predmeta i ocjena više puta. Ispisi sve unose.
-class Ucenik:
-    def __init__(self, ime, predmet, ocjena):
-        self.ime = ime
+1. Definirajte klasu ZakljucenaOcjena s predmetom i ocjenom (1-5) te klasu Ucenik koja sadrži listu ocjena. Omogućite unos imena, prezimena i više predmeta s ocjenama, zatim sve ispišite.
+
+
+class ZakljucenaOcjena:
+    def __init__(self, predmet, ocjena):
         self.predmet = predmet
         self.ocjena = ocjena
 
-lista = []
+class Ucenik:
+    def __init__(self, ime_prezime):
+        self.ime_prezime = ime_prezime
+        self.ocjene = []
 
-while True:
-    ime = input("Ime: ")
-    predmet = input("Predmet: ")
-    ocjena = int(input("Ocjena: "))
-    lista.append(Ucenik(ime, predmet, ocjena))
-    
-    jos = input("Želiš li dodati još? (da/ne): ")
-    if jos.lower() != "da":
-        break
+    def dodaj_ocjenu(self, ocjena):
+        self.ocjene.append(ocjena)
 
-for u in lista:
-    print(f"{u.ime} - {u.predmet}: {u.ocjena}")
+    def ispis(self):
+        print(self.ime_prezime)
+        for o in self.ocjene:
+            print(f"- {o.predmet} ({o.ocjena})")
+
+# unos podataka
+ime_prezime = input("Ime i prezime: ")
+u = Ucenik(ime_prezime)
+
+for i in range(3):
+    predmet = input(f"Upišite {i+1}. predmet: ")
+    ocjena = int(input(f"Upišite ocjenu {i+1}. predmeta: "))
+    u.dodaj_ocjenu(ZakljucenaOcjena(predmet, ocjena))
+
+# ispis rezultata
+print("ISPIS:")
+u.ispis()
+
+
     
 2. Kreiraj klasu koja ispisuje naziv slike i dimenzije.
 class Slika:
@@ -68,9 +82,30 @@ s = Slika("slika.jpg", 1920, 1080)
 s.ispis()
 
 
+3.Definirajte klasu koja čuva podatke o planetima i njihovim mjesecima. Omogućite korisniku unos imena mjeseca i ispišite kojem planetu pripada ili da ne postoji.
 
+class Planet:
+    def __init__(self, ime, mjeseci):
+        self.ime = ime
+        self.mjeseci = mjeseci
 
+planeti = [
+    Planet("Zemlja", ["Mjesec"]),
+    Planet("Mars", ["Phobos", "Deimos"]),
+    Planet("Jupiter", ["Io", "Europa", "Callisto", "Elara", "Himalia"])
+]
 
+uneseni_mjesec = input("Unesite naziv mjeseca: ")
+
+pronađen = False
+for p in planeti:
+    if uneseni_mjesec in p.mjeseci:
+        print(f"{uneseni_mjesec} pripada planetu {p.ime}.")
+        pronađen = True
+        break
+
+if not pronađen:
+    print(f"{uneseni_mjesec} ne postoji u ovoj tablici.")
 
 
 
@@ -79,35 +114,46 @@ s.ispis()
 
 
 I5
-1. Unesi vrijeme početka i kraja filma i ispiši koliko minuta traje.
+1. Napišite program koji traži datum i vrijeme početka i kraja filma u hrvatskom formatu, te ispisuje trajanje filma u minutama.
+
 from datetime import datetime
 
-pocetak = input("Unesi vrijeme početka (HH:MM): ")
-kraj = input("Unesi vrijeme kraja (HH:MM): ")
+pocetak = input("Unesite početak filma (dd.mm.yyyy HH:MM): ")
+kraj = input("Unesite kraj filma (dd.mm.yyyy HH:MM): ")
 
-t1 = datetime.strptime(pocetak, "%H:%M")
-t2 = datetime.strptime(kraj, "%H:%M")
-trajanje = (t2 - t1).seconds // 60
+format_datuma = "%d.%m.%Y %H:%M"
 
-print(f"Film je trajao {trajanje} minuta")
+dt_pocetak = datetime.strptime(pocetak, format_datuma)
+dt_kraj = datetime.strptime(kraj, format_datuma)
+
+trajanje = dt_kraj - dt_pocetak
+trajanje_min = int(trajanje.total_seconds() / 60)
+
+print(f"Film traje {trajanje_min} minuta.")
 
 
-2.Zrcalno okreni sliku i zamuti donji dio.
-from PIL import Image
-from IPython.display import display
 
-im = Image.open("pingvin_black.jpg")
-logo = Image.open("Slike/vua.png")
+2.Prikažite sliku snoopy.jpg tako da gornja polovica ostane originalna, a donja bude zrcaljena i zamućena.
 
-slika = Image.open("slika.jpg")
-zrcaljena = slika.transpose(Image.FLIP_LEFT_RIGHT)
 
-sirina, visina = zrcaljena.size
-donji_dio = zrcaljena.crop((0, visina//2, sirina, visina))
-zamuceni_dio = donji_dio.filter(ImageFilter.GaussianBlur(5))
-zrcaljena.paste(zamuceni_dio, (0, visina//2))
+from PIL import Image, ImageFilter
 
-zrcaljena.show()
+# učitaj sliku
+img = Image.open("/home/gdjambic/images/snoopy.jpg")
+
+# dimenzije
+sirina, visina = img.size
+gornja_pol = img.crop((0, 0, sirina, visina//2))
+donja_pol = gornja_pol.transpose(Image.FLIP_TOP_BOTTOM).filter(ImageFilter.GaussianBlur(3))
+
+# spajanje
+nova_slika = Image.new('RGB', (sirina, visina))
+nova_slika.paste(gornja_pol, (0, 0))
+nova_slika.paste(donja_pol, (0, visina//2))
+
+# prikaži
+nova_slika.show()
+
 
 
 
@@ -142,8 +188,25 @@ for dan in range(1, calendar.monthrange(2024, mjesec)[1] + 1):
 print(f"U {mjesec}. mjesecu 2024. ima {broj_radnih_dana} radnih dana.")
 
 
+4. Napišite program koji od korisnika učitava redni broj mjeseca u 2024. godini te ispisuje koliko radnih sati ima u tom mjesecu, uz pretpostavku da su radni dani od ponedjeljka do petka i da svaki radni dan ima 8 radnih sati.
 
+import calendar
 
+# unos
+mj = int(input("Unesite redni broj mjeseca (1-12): "))
+
+# broj dana u mjesecu
+_, broj_dana = calendar.monthrange(2024, mj)
+
+# generiranje radnih dana
+radni_sati = 0
+
+for dan in range(1, broj_dana + 1):
+    tjedan_dan = calendar.weekday(2024, mj, dan)
+    if tjedan_dan < 5:  # pon-pet
+        radni_sati += 8
+
+print(f"U {mj}. mjesecu 2024. ima ukupno {radni_sati} radnih sati.")
 
 
 
